@@ -1,0 +1,137 @@
+﻿@model List<ResultMenuTableDto>
+@{
+    ViewData["Title"] = "Anlık Masa Durumları";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    @* masanın durumuna göre masa rengini değiştirme *@
+    //string color = "";
+
+    @* durumun dolu yada boş şeklinde yazması için tanımlandı *@ 
+    //string status = "";
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+
+<div class="main-panel">
+    <div class="content">
+        <div class="container-fluid">
+            <script type="text/javascript">
+                @* signalR ile anlık olarak masa durumu çekme ve değiştirme işlemi *@
+                    $(document).ready(() => {
+
+                        var connection = new signalR.HubConnectionBuilder().withUrl("http://localhost:5271/SignalRHub").build();
+
+                        $("#connstatus").text(connection.state);
+
+                        connection.start().then(() => {
+                            $("#connstatus").text(connection.state);
+                            setInterval(() => {
+                                //1. yol
+                                //connection.invoke("SendCategoryCount");
+                                //connection.invoke("SendProductCount");
+                                //connection.invoke("ActivePassiveCategoryCount");
+
+                                //ikinci yol
+                                connection.invoke("GetMenuTableStatus");
+
+                            }, 1000);
+
+                        }).catch((err) => { console.log(err) });
+
+                        connection.on("ReceiveGetMenuTableStatus", (value) => {
+                            $("#categorycount").text(value);
+
+                            @* status ve renk değerlerini koşula göre değiştirmek için tanımlandı *@
+                            var color = "";
+                            var status = "";
+                            let tablehtml = `<div class="row">`;
+                            
+                            $.each(value, (index, item) => {
+                                if (item.status == true) {
+                                    color = "card card-stats card-success";
+                                    status = "Masa Boş";
+                                }
+                                else {
+                                    color = "card card-stats card-danger";
+                                    status = "Masa Dolu";
+                                }    
+                                tablehtml += `<div class="col-md-3">
+                                               <div class="${color}">
+                                                <div class="card-body ">
+                                                <div class="row">
+                                                    <div class="col-5">
+                                                        <div class="icon-big text-center">
+                                                            <i class="la la-users"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-7 d-flex align-items-center">
+                                                        <div class="numbers">
+                                                            <p class="card-category">${item.name}</p>
+                                                            <h4 class="card-title">${status}</h4>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>`
+                            });
+                            tablehtml += "</div>";
+                            $("#statuslist").html(tablehtml);
+                        });
+
+                    });
+            </script>
+            <h4 class="page-title">Anlık Masa Durumları</h4>
+            <div class="row">
+                @*
+                @foreach (var item in Model)
+                {
+                    /* masanın durumuna göre masa rengini değiştirme */
+                    if (item.Status==false)
+                    {
+                        color = "card card-stats card-danger";
+
+                        status = "Masa Boş";
+                    }
+                    else
+                    {
+                        color = "card card-stats card-succes";
+
+                        status = "Masa Boş";
+                        status = "Masa Dolu";
+                    }
+                    <div class="col-md-3">
+                        <div class="@color">
+                            <div class="card-body ">
+                                <div class="row">
+                                    <div class="col-5">
+                                        <div class="icon-big text-center">
+                                            <i class="la la-users"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-7 d-flex align-items-center">
+                                        <div class="numbers">
+                                            <p class="card-category">@item.Name</p>
+                                            <h4 class="card-title" id="categorycount">@status</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                } 
+                *@
+                <div id="statuslist"></div>
+                
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+

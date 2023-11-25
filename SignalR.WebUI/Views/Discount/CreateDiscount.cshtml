@@ -1,0 +1,53 @@
+﻿@model CreateDiscountDto
+@{
+    ViewData["Title"] = "İndirim Ekleme Sayfası";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">@ViewData["Title"]</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <div class="form-group">
+                                <label asp-for="Title"></label>
+                                <input type="text" class="form-control" asp-for="Title">
+                            </div>
+
+                            <br>
+
+                            <div class="form-group">
+                                <label asp-for="ImageIrl"></label>
+                                <input type="text" class="form-control" asp-for="ImageIrl">
+                            </div>
+
+                            <br />
+
+                            <div class="form-group">
+                                <label asp-for="Amount"></label>
+                                <input type="text" class="form-control" asp-for="Amount">
+                            </div>
+
+                            <br />
+
+                            <div class="form-group">
+                                <label asp-for="Description"></label>
+                                <textarea rows="5" class="form-control" asp-for="Description"></textarea>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button class="btn btn-outline-primary">Ekle</button>
+                            <a asp-controller="Discount" asp-action="Index" class="btn btn-outline-danger">İptal</a>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+

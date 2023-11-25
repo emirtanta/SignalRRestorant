@@ -1,0 +1,101 @@
+﻿@model List<ResultBookingDto>
+@{
+    ViewData["Title"] = "Rezervasyon Listesi";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+
+<div class="content">
+    <div class="container-fluid">
+        <script type="text/javascript">
+            @* signalR ile anlık olarak rezevasyonları çekme işlemi *@
+                $(document).ready(() => {
+
+                    var connection = new signalR.HubConnectionBuilder().withUrl("http://localhost:5271/SignalRHub").build();
+
+                    $("#connstatus").text(connection.state);
+
+                    connection.start().then(() => {
+                        $("#connstatus").text(connection.state);
+                        setInterval(() => {
+                            //1. yol
+                            //connection.invoke("SendCategoryCount");
+                            //connection.invoke("SendProductCount");
+                            //connection.invoke("ActivePassiveCategoryCount");
+
+                            //ikinci yol
+                            connection.invoke("GetBookingList");
+
+                        }, 5000);
+
+                    }).catch((err) => { console.log(err) });
+
+                    connection.on("ReceiveBookingList", (value) => {
+                        let tablehtml = `<table class=table mt-3><thead>
+                                                            <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Rezervasyon Adı</th>
+                                                            <th scope="col">Mail</th>
+                                                            <th scope="col">Telefon</th>
+                                                            <th scope="col">Kişi Sayısı</th>
+                                                            <th scope="col">Açıklama</th>
+                                                            <th scope="col"></th>
+                                                            </tr>
+                                                            </thead>
+                                                             <tbody>`
+                        $.each(value, (index, item) => {
+                            tablehtml += `<tr>
+                                            <td>${item.bookingId}</td>
+                                            <td>${item.name}</td>
+                                            <td>${item.phone}</td>
+                                            <td>${item.personCount}</td>
+                                            <td>${item.Description}</td>
+                                            <td>
+                                                                    <a asp-controller="Booking" asp-action="BookingStatusApproved" asp-route-id="${item.bookingId}" class="btn btn-outline-success">Onayla</a>
+                                               <a asp-controller="Booking" asp-action="UpdateBooking" asp-route-id="${item.bookingId}" class="btn btn-outline-info">Düzenle</a>
+                                               <a asp-controller="Booking" asp-action="DeleteBooking" asp-route-id="${item.bookingId}" class="btn btn-outline-danger">Sil</a>
+                                                                       <a asp-controller="Booking" asp-action="BookingStatusCancelled" asp-route-id="${item.bookingId}" class="btn btn-outline-dark">İptal Et</a>
+                                           </td>
+                                          </tr>`
+                        });
+                        tablehtml += "</tbody></table>";
+
+                        $("#bookinglist").html(tablehtml);
+
+                    });
+
+                });
+        </script>
+        <h4 class="page-title">@ViewData["Title"]</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            Rezervasyon ile ilgili işlemleri aşağıdan gerçekleştirebilirsiniz.
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-sub">
+                        </div>
+
+                        <a asp-controller="Booking" asp-action="CreateBooking" class="btn btn-outline-primary">Ekle</a>
+
+                        <div class="col-md-8">
+                            <ul class="list-group" id="bookinglist">
+                            </ul>
+                        </div>
+
+                        <div id="bookinglist"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+

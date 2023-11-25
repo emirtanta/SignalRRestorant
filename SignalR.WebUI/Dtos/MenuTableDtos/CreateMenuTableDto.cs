@@ -1,0 +1,15 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SignalR.WebUI.Dtos.MenuTableDtos
+{
+	public class CreateMenuTableDto
+	{
+
+		[StringLength(50)]
+		[Display(Name = "Masa Adı")]
+		public string Name { get; set; }
+
+		[Display(Name = "Masa Durumu")]
+		public bool Status { get; set; }
+	}
+}

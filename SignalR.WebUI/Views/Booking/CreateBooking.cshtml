@@ -1,0 +1,70 @@
+﻿@model CreateBookingDto
+@{
+    ViewData["Title"] = "Rezervasyon Ekleme Sayfası";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">@ViewData["Title"]</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <form method="post">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <div class="form-group">
+                                <label asp-for="Name"></label>
+                                <input type="text" class="form-control" asp-for="Name">
+                            </div>
+
+                            <br />
+
+                            <div class="form-group">
+                                <label asp-for="Mail"></label>
+                                <input type="text" class="form-control" asp-for="Mail">
+                            </div>
+
+                            <br />
+
+                            <br />
+
+                            <div class="form-group">
+                                <label asp-for="Phone"></label>
+                                <input type="text" class="form-control" asp-for="Phone">
+                            </div>
+
+                            <br />
+
+                            <div class="form-group">
+                                <label asp-for="PersonCount"></label>
+                                <input type="number" class="form-control" asp-for="PersonCount">
+                            </div>
+
+                            <br />
+
+                            <div class="form-group">
+                                <label asp-for="Date"></label>
+                                <input type="date" class="form-control" asp-for="Date">
+                            </div>
+
+                            <br />
+
+                            <div class="form-group">
+                                <label asp-for="Name"></label>
+                                <textarea rows="5" class="form-control" asp-for="Name"></textarea>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button class="btn btn-outline-info">Güncelle</button>
+                            <a asp-controller="Booking" asp-action="Index" class="btn btn-outline-danger">İptal</a>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,66 @@
+﻿@model List<ResultDiscountDto>
+@{
+	ViewData["Title"] = "İndirim Listesi";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+	int count = 0;
+}
+
+<div class="content">
+	<div class="container-fluid">
+		<h4 class="page-title">@ViewData["Title"]</h4>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-header">
+						<div class="card-title">
+							Kategori ile ilgili işlemleri aşağıdan gerçekleştirebilirsiniz.
+						</div>
+					</div>
+					<div class="card-body">
+						<div class="card-sub">
+						</div>
+
+						<a asp-controller="Discount" asp-action="CreateDiscount" class="btn btn-outline-primary">Ekle</a>
+
+						<table class="table mt-3">
+							<thead>
+								<tr>
+									<th scope="col">#</th>
+									<th scope="col">Başlık</th>
+									<th scope="col">Resim</th>
+									<th scope="col">İndirim Oranı</th>
+									<th scope="col">Durum</th>
+									<th scope="col"></th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in Model)
+								{
+									count++;
+									<tr>
+										<td>@count</td>
+										<td>@item.Title</td>
+										<td>@item.ImageIrl</td>
+										<td>@item.Amount</td>
+										<td>@item.Status</td>
+										<td>
+											<a asp-controller="Discount" asp-action="UpdateDiscount" asp-route-id="@item.DiscountId" class="btn btn-outline-warning">Durum</a>
+											<a asp-controller="Discount" asp-action="UpdateDiscount" asp-route-id="@item.DiscountId" class="btn btn-outline-info">Düzenle</a>
+											<a asp-controller="Discount" asp-action="DeleteDiscount" asp-route-id="@item.DiscountId" class="btn btn-outline-danger">Sil</a>
+											<a asp-controller="Discount" asp-action="ChangeStatusToTrue" asp-route-id="@item.DiscountId" class="btn btn-outline-success">Aktif Yap</a>
+											<a asp-controller="Discount" asp-action="ChangeStatusToFalse" asp-route-id="@item.DiscountId" class="btn btn-outline-dark">Pasif Yap</a>
+										</td>
+									</tr>
+								}
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+
